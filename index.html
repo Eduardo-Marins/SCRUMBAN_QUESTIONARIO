@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="tela-inicial">
+        <h1>Scrumban Questionário</h1>
+        <button id="btnComecar">Iniciar Questionário</button>
+    </main>
+      <!-- Modal do questionário -->
+    <div id="modalQuestionario" class="modal">
+
+        <div class="modal-conteudo">
+
+            <span id="numeroQuestao">
+                Questão 1 de 5
+            </span>
+
+            <h2 id="pergunta">
+                Pergunta aqui
+            </h2>
+
+            <div id="alternativas">
+
+                <button class="alternativa">
+                    Alternativa 1
+                </button>
+
+                <button class="alternativa">
+                    Alternativa 2
+                </button>
+
+                <button class="alternativa">
+                    Alternativa 3
+                </button>
+
+                <button class="alternativa">
+                    Alternativa 4
+                </button>
+
+                   <button class="alternativa">
+                    Alternativa 5
+                </button>
+
+            </div>
+
+            <div id="resultado">
+                <!-- Mensagem de acerto ou erro -->
+            </div>
+
+            <button id="btnProxima">
+                Próxima questão
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- Tela final -->
+    <div id="telaFinal" class="tela-final">
+
+        <h1>Questionário finalizado!</h1>
+
+        <p id="resultadoFinal">
+            Você acertou 0 de 5 questões.
+        </p>
+
+        <button id="btnReiniciar">
+            Tentar novamente
+        </button>
+
+    </div>
+
+
+    <script src="main.js"></script>
+</body>
+</html>

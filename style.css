@@ -1,0 +1,466 @@
+/* ===============================
+   CONFIGURAÇÕES GERAIS
+================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+
+    min-height: 100vh;
+
+    background: #f2f4f7;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+
+/* ===============================
+   TELA INICIAL
+================================ */
+
+.tela-inicial {
+    width: 100%;
+    max-width: 550px;
+
+    background: white;
+
+    padding: 50px 40px;
+
+    border-radius: 15px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+}
+
+.tela-inicial h1 {
+    font-size: clamp(28px, 5vw, 38px);
+
+    margin-bottom: 15px;
+}
+
+.tela-inicial p {
+    font-size: clamp(16px, 3vw, 18px);
+
+    line-height: 1.5;
+
+    color: #666;
+
+    margin-bottom: 30px;
+}
+
+
+/* ===============================
+   BOTÕES
+================================ */
+
+button {
+    border: none;
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    border-radius: 8px;
+
+    transition: 0.2s;
+}
+
+
+/* Botão começar */
+
+#btnComecar {
+    background: #2563eb;
+
+    color: white;
+
+    padding: 14px 25px;
+
+    max-width: 100%;
+}
+
+#btnComecar:hover {
+    background: #1d4ed8;
+}
+
+
+/* ===============================
+   MODAL
+================================ */
+
+.modal {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    overflow-y: auto;
+}
+
+
+/* ===============================
+   CONTEÚDO DO MODAL
+================================ */
+
+.modal-conteudo {
+    width: 100%;
+
+    max-width: 750px;
+
+    max-height: 90vh;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+    overflow-y: auto;
+}
+
+
+/* ===============================
+   NÚMERO DA QUESTÃO
+================================ */
+
+#numeroQuestao {
+    display: block;
+
+    color: #2563eb;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    margin-bottom: 18px;
+}
+
+
+/* ===============================
+   PERGUNTA
+================================ */
+
+#pergunta {
+    font-size: clamp(20px, 3vw, 26px);
+
+    line-height: 1.4;
+
+    overflow-wrap: break-word;
+
+    word-wrap: break-word;
+
+    margin-bottom: 28px;
+}
+
+
+/* ===============================
+   ALTERNATIVAS
+================================ */
+
+#alternativas {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    width: 100%;
+}
+
+.alternativa {
+    width: 100%;
+
+    padding: 16px 18px;
+
+    background: #f1f5f9;
+
+    border: 2px solid #e2e8f0;
+
+    text-align: left;
+
+    line-height: 1.5;
+
+    white-space: normal;
+
+    overflow-wrap: break-word;
+
+    word-wrap: break-word;
+}
+
+.alternativa:hover:not(:disabled) {
+    background: #e2e8f0;
+
+    border-color: #2563eb;
+}
+
+.alternativa:disabled {
+    cursor: default;
+}
+
+
+/* ===============================
+   RESULTADO
+================================ */
+
+#resultado {
+    margin-top: 22px;
+
+    font-size: 18px;
+
+    line-height: 1.4;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    min-height: 25px;
+
+    overflow-wrap: break-word;
+}
+
+
+/* ===============================
+   BOTÃO PRÓXIMA
+================================ */
+
+#btnProxima {
+    display: none;
+
+    margin: 22px auto 0;
+
+    padding: 13px 25px;
+
+    background: #2563eb;
+
+    color: white;
+}
+
+#btnProxima:hover {
+    background: #1d4ed8;
+}
+
+
+/* ===============================
+   TELA FINAL
+================================ */
+
+.tela-final {
+    display: none;
+
+    width: 100%;
+
+    max-width: 550px;
+
+    background: white;
+
+    padding: 50px 40px;
+
+    border-radius: 15px;
+
+    text-align: center;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.tela-final h1 {
+    font-size: clamp(25px, 5vw, 36px);
+
+    margin-bottom: 20px;
+}
+
+.tela-final p {
+    font-size: clamp(17px, 3vw, 20px);
+
+    line-height: 1.5;
+
+    color: #555;
+
+    margin-bottom: 30px;
+}
+
+
+/* ===============================
+   BOTÃO REINICIAR
+================================ */
+
+#btnReiniciar {
+    background: #2563eb;
+
+    color: white;
+
+    padding: 14px 25px;
+}
+
+#btnReiniciar:hover {
+    background: #1d4ed8;
+}
+
+
+/* ===============================
+   TABLET
+================================ */
+
+@media (max-width: 768px) {
+
+    body {
+        padding: 15px;
+    }
+
+    .modal {
+        padding: 15px;
+    }
+
+    .modal-conteudo {
+        max-width: 100%;
+
+        max-height: 92vh;
+
+        padding: 28px;
+    }
+
+    #pergunta {
+        font-size: 22px;
+    }
+
+    .alternativa {
+        font-size: 15px;
+
+        padding: 14px 16px;
+    }
+}
+
+
+/* ===============================
+   CELULAR
+================================ */
+
+@media (max-width: 480px) {
+
+    body {
+        padding: 10px;
+    }
+
+    .tela-inicial {
+        padding: 35px 22px;
+
+        border-radius: 12px;
+    }
+
+    .tela-inicial p {
+        margin-bottom: 25px;
+    }
+
+
+    /* Modal */
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-conteudo {
+        padding: 22px 18px;
+
+        max-height: 95vh;
+
+        border-radius: 12px;
+    }
+
+
+    /* Número */
+
+    #numeroQuestao {
+        font-size: 14px;
+
+        margin-bottom: 14px;
+    }
+
+
+    /* Pergunta */
+
+    #pergunta {
+        font-size: 19px;
+
+        line-height: 1.4;
+
+        margin-bottom: 20px;
+    }
+
+
+    /* Alternativas */
+
+    #alternativas {
+        gap: 10px;
+    }
+
+    .alternativa {
+        font-size: 14px;
+
+        padding: 13px 14px;
+
+        line-height: 1.45;
+    }
+
+
+    /* Resultado */
+
+    #resultado {
+        font-size: 16px;
+
+        margin-top: 18px;
+    }
+
+
+    /* Botão próxima */
+
+    #btnProxima {
+        width: 100%;
+
+        margin-top: 18px;
+    }
+
+
+    /* Tela final */
+
+    .tela-final {
+        padding: 35px 22px;
+
+        border-radius: 12px;
+    }
+
+    .tela-final p {
+        font-size: 18px;
+    }
+
+    #btnReiniciar {
+        width: 100%;
+    }
+
+}
