@@ -1,0 +1,116 @@
+[
+  {
+    "file": "armario\\armarioAsset (1).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (2).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (3).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (4).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (5).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (6).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (7).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "armario\\armarioAsset (8).png",
+    "width": 1254,
+    "height": 1254,
+    "alpha": true
+  },
+  {
+    "file": "battle\\assetsAndBattleEfct.png",
+    "width": 614,
+    "height": 296,
+    "alpha": false
+  },
+  {
+    "file": "battle\\backgrounds.png",
+    "width": 737,
+    "height": 466,
+    "alpha": false
+  },
+  {
+    "file": "battle\\boserSprites.jpeg",
+    "width": 2048,
+    "height": 2048,
+    "alpha": false
+  },
+  {
+    "file": "battle\\bowserAssets.jpeg",
+    "width": 2048,
+    "height": 2048,
+    "alpha": false
+  },
+  {
+    "file": "battle\\efects.png",
+    "width": 491,
+    "height": 1926,
+    "alpha": false
+  },
+  {
+    "file": "battle\\lifeAndTalking.jpeg",
+    "width": 2816,
+    "height": 1536,
+    "alpha": false
+  },
+  {
+    "file": "battle\\marioAssets.jpeg",
+    "width": 2048,
+    "height": 2048,
+    "alpha": false
+  },
+  {
+    "file": "battle\\marioSprites.jpeg",
+    "width": 2048,
+    "height": 2048,
+    "alpha": false
+  },
+  {
+    "file": "battle\\nameAndTipo.png",
+    "width": 500,
+    "height": 500,
+    "alpha": false
+  },
+  {
+    "file": "battle\\spritesGame.jpg",
+    "width": 312,
+    "height": 312,
+    "alpha": false
+  },
+  {
+    "file": "battle\\superScrumban64.jpeg",
+    "width": 3418,
+    "height": 1248,
+    "alpha": false
+  }
+]

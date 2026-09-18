@@ -1,82 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <main class="tela-inicial">
-        <h1>Scrumban Questionário</h1>
-        <button id="btnComecar">Iniciar Questionário</button>
-    </main>
-      <!-- Modal do questionário -->
-    <div id="modalQuestionario" class="modal">
-
-        <div class="modal-conteudo">
-
-            <span id="numeroQuestao">
-                Questão 1 de 5
-            </span>
-
-            <h2 id="pergunta">
-                Pergunta aqui
-            </h2>
-
-            <div id="alternativas">
-
-                <button class="alternativa">
-                    Alternativa 1
-                </button>
-
-                <button class="alternativa">
-                    Alternativa 2
-                </button>
-
-                <button class="alternativa">
-                    Alternativa 3
-                </button>
-
-                <button class="alternativa">
-                    Alternativa 4
-                </button>
-
-                   <button class="alternativa">
-                    Alternativa 5
-                </button>
-
-            </div>
-
-            <div id="resultado">
-                <!-- Mensagem de acerto ou erro -->
-            </div>
-
-            <button id="btnProxima">
-                Próxima questão
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- Tela final -->
-    <div id="telaFinal" class="tela-final">
-
-        <h1>Questionário finalizado!</h1>
-
-        <p id="resultadoFinal">
-            Você acertou 0 de 5 questões.
-        </p>
-
-        <button id="btnReiniciar">
-            Tentar novamente
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#eeeadd" />
+    <meta
+      name="description"
+      content="Entre no armário, enfrente Bowser e teste seus conhecimentos sobre Scrumban. Uma pequena aventura retrô em cinco desafios."
+    />
+    <title>SCRUMBAN QUESTS — Uma nova fase do seu conhecimento</title>
+    <link rel="icon" type="image/webp" href="./assets/star.webp" />
+    <link rel="preload" as="image" href="./assets/cabinet-3.webp" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+    <header class="site-header">
+      <a class="brand" href="#/" aria-label="Scrumban Quests, início"
+        ><span class="brand-mark" aria-hidden="true">SQ<span>64</span></span
+        ><span>SCRUMBAN<br />QUESTS</span></a
+      >
+      <nav aria-label="Navegação principal">
+        <button class="nav-link" data-action="help">
+          COMO JOGAR <span aria-hidden="true">↗</span>
         </button>
-
-    </div>
-
-
-    <script src="main.js"></script>
-</body>
+        <button
+          class="sound-button"
+          data-action="sound"
+          aria-pressed="false"
+          aria-label="Ativar som"
+        >
+          <span class="sound-icon" aria-hidden="true"
+            ><i></i><i></i><i></i><i></i></span
+          ><span class="sound-label">SOM OFF</span>
+        </button>
+        <a class="header-play" href="#/saves"
+          ><span aria-hidden="true">▶</span> JOGAR</a
+        >
+      </nav>
+    </header>
+    <main id="main-content" tabindex="-1"></main>
+    <div
+      id="announcement"
+      class="sr-only"
+      role="status"
+      aria-live="polite"
+    ></div>
+    <div id="save-warning" class="save-warning" role="status" hidden></div>
+    <dialog id="help-dialog" class="game-dialog" aria-labelledby="help-title">
+      <button
+        class="dialog-close"
+        data-action="close-dialog"
+        aria-label="Fechar instruções"
+      >
+        ×
+      </button>
+      <p class="eyebrow">MANUAL DO JOGADOR / 01</p>
+      <h2 id="help-title">CONHECIMENTO<br />É SEU SUPERPODER.</h2>
+      <p>
+        Escolha um dos três arquivos e enfrente Bowser em cinco perguntas sobre
+        Scrumban.
+      </p>
+      <ol class="manual-list">
+        <li>
+          <strong>5 HP para cada lado.</strong> Uma resposta certa tira 1 HP do
+          Bowser. Uma errada tira 1 HP do Mario.
+        </li>
+        <li>
+          <strong>Jogue até a última pergunta.</strong> Você vence se terminar
+          com mais HP que Bowser. Empate é derrota.
+        </li>
+        <li>
+          <strong>Seu progresso fica salvo.</strong> Continue neste navegador de
+          onde parou. Cada acerto vale 100 pontos.
+        </li>
+      </ol>
+      <p class="manual-keys">
+        TECLADO: A–E para responder · Tab para navegar · Enter para selecionar
+      </p>
+      <button class="game-button" data-action="close-dialog">
+        ENTENDI. LET'S GO! <span>→</span>
+      </button>
+      <details class="credits">
+        <summary>Sobre esta aventura e créditos</summary>
+        <p>
+          Projeto educacional e homenagem independente. Personagens pertencem à
+          Nintendo. Assets fornecidos pelo projeto: sprites de referência GBA;
+          itens por Wario Bros., Tiberian, Rapid Thy, Hyper TH, Black Squirrel;
+          cenários por Desgardes; referência de interface por redblueyellow. Não
+          afiliado à Nintendo.
+        </p>
+      </details>
+    </dialog>
+    <dialog
+      id="overwrite-dialog"
+      class="game-dialog small-dialog"
+      aria-labelledby="overwrite-title"
+    >
+      <p class="eyebrow">NOVO JOGO</p>
+      <h2 id="overwrite-title">RECOMEÇAR A QUEST?</h2>
+      <p>
+        O progresso deste arquivo será substituído. Os outros arquivos continuam
+        guardados.
+      </p>
+      <div class="dialog-actions">
+        <button class="game-button" data-action="confirm-new">RECOMEÇAR</button
+        ><button class="text-button" data-action="close-dialog">
+          CANCELAR
+        </button>
+      </div>
+    </dialog>
+    <noscript>Ative o JavaScript para jogar Scrumban Quests.</noscript>
+    <script type="module" src="./main.js"></script>
+  </body>
 </html>

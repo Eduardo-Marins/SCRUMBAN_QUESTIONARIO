@@ -1,259 +1,197 @@
-// ===============================
-// PERGUNTAS DO QUESTIONÁRIO
-// ===============================
+import "@fontsource/anton/latin-400.css";
+import "@fontsource/vt323/latin-400.css";
+import "@fontsource/dm-sans/latin-400.css";
+import "@fontsource/dm-sans/latin-600.css";
+import "@fontsource/dm-sans/latin-700.css";
+import { questions } from "./src/data/questions.js";
+import { createGame, answerQuestion } from "./src/game/engine.js";
+import { createSaveStore } from "./src/game/storage.js";
+import { toggleSound, playSound } from "./src/game/audio.js";
+import { landingScreen, menuScreen } from "./src/ui/landing.js";
+import { savesScreen } from "./src/ui/saves.js";
+import { battleScreen, showFeedback } from "./src/ui/battle.js";
+import { resultScreen } from "./src/ui/result.js";
+import { asset } from "./src/ui/common.js";
+import { mountScrollScene } from "./src/motion/scroll-scene.js";
 
-const perguntas = [
-    {
-        pergunta: "A coluna 'Em desenvolvimento' do quadro Scrumban atingiu o seu limite máximo de WIP,(Work in Progress), e um desenvolvedor acabou de ficar disponível. Qual é a medida correta a ser tomada?",
-        alternativas: [
-            "O desenvolvedor disponivel deve puxar uma nova tarefa da coluna 'A Fazer' para não ficar ocioso, ignorando temporariamente o limite até que a situação se normalize.",
-            "O limite de WIP da coluna 'Em desenvolvimento' deve ser aumentado imediatamente pelo Scrum Master para acomodar a nova tarefa do desenvolvedor.",
-            "O desenvolvedor deve focar em ajudar a escoar as tarefas que estão nas colunas seguintes (como 'Teste' ou 'Revisão') ou ajudar os colegas a destravar as tarefas da própria coluna de desenvolvimento.",
-            "A equipe deve interromper todo o trabalho do projeto e agendar uma reunião de planejamento de emergência com o Product Owner para repriorizar o Backlog.",
-            "O desenvolvedor deve criar uma nova tarefa de suporte técnico que não estava no Backlog para poder trabalhar sem violar o sistema."
-        ],
-        resposta: 2
-    },
+const root = document.querySelector("main");
+const storageWarning = () => {
+  const warning = document.querySelector("#save-warning");
+  warning.hidden = false;
+  warning.textContent =
+    "Não foi possível acessar os saves. Você pode jogar, mas o progresso pode ficar apenas nesta sessão.";
+};
+const store = createSaveStore(
+  {
+    getItem: (key) => localStorage.getItem(key),
+    setItem: (key, value) => localStorage.setItem(key, value),
+  },
+  storageWarning,
+);
+let game = null;
+let locked = false;
+let pendingSlot = null;
+let feedbackTimer;
+let scene;
+let battleAssetsLoaded = false;
 
-    {
-        pergunta: "Sobre o Scrumban e sua utilização de Sprints, assinale a alternativa correta:",
-        alternativas: [
-            "O Scrumban exige obrigatoriamente Sprints fixas de duas semanas, assim como o Scrum tradicional.",
-            "No Scrumban, as Sprints podem ser utilizadas, mas não são obrigatórias, permitindo que a equipe trabalhe com fluxo contínuo e maior flexibilidade.",
-            "As Sprints no Scrumban devem ter duração obrigatória de exatamente um mês.",
-            "O Scrumban não permite planejamento, pois utiliza exclusivamente o sistema Kanban.",
-            "O Scrumban utiliza Sprints apenas para definir os papéis dos integrantes da equipe."
-        ],
-        resposta: 1
-    },
-
-    {
-        pergunta: "Durante a Sprint Planning, o time não consegue terminar o planejamento de todas as tarefas porque o tempo máximo da reunião (timebox) acabou. Qual é a conduta correta a ser adotada pelo time Scrum?",
-        alternativas: [
-            "A reunião deve ser encerrada imediatamente, e os desenvolvedores começam a Sprint planejando o restante das tarefas sob demanda ao longo dos dias.",
-            "O Scrum Master deve estender a reunião por quantas horas forem necessárias até que 100% das tarefas estejam detalhadas.",
-            "A Sprint atual deve ser cancelada pelo Product Owner e uma nova reunião deve ser agendada para o dia seguinte.",
-            "Os desenvolvedores devem trabalhar horas extras nos primeiros dias para compensar a falta de planejamento.",
-            "O Product Owner assume a responsabilidade e define sozinho o plano de ação que faltou para o time."
-        ],
-        resposta: 0
-    },
-
-    {
-        pergunta: "No Scrumban, o fluxo visual é uma prática importante para o gerenciamento das atividades. Sobre essa prática, assinale a alternativa correta:",
-        alternativas: [
-            " O fluxo visual serve apenas para registrar as tarefas concluídas ao final de cada Sprint.",
-            "O fluxo visual permite acompanhar o andamento das tarefas por meio de um quadro, facilitando a identificação de gargalos e a organização do trabalho.",
-            "O fluxo visual elimina a necessidade de priorizar atividades, pois todas as tarefas devem ser executadas simultaneamente.",
-            "O fluxo visual é utilizado exclusivamente pelo Scrum Master para controlar o desempenho dos desenvolvedores.",
-            "O fluxo visual impede alterações nas tarefas depois que o planejamento inicial é realizado."
-        ],
-        resposta: 1
-    },
-
-    {
-        pergunta: "Uma das limitações do Scrumban está relacionada ao gerenciamento de funções e responsabilidades dentro da equipe. Assinale a alternativa correta:",
-        alternativas: [
-            "O Scrumban possui papéis obrigatórios e rigidamente definidos, como Product Owner, Scrum Master e Equipe de Desenvolvimento.",
-            " O Scrumban elimina completamente a necessidade de divisão de responsabilidades entre os integrantes da equipe.",
-            " Por não possuir papéis tão formalmente definidos quanto o Scrum, o Scrumban pode gerar indefinição de responsabilidades e dificuldades no gerenciamento das funções da equipe.",
-            " No Scrumban, todas as decisões devem ser tomadas exclusivamente pelo Scrum Master.",
-            "A flexibilidade do Scrumban impede qualquer tipo de problema relacionado à organização das funções."
-        ],
-        resposta: 1
-    }
-];
-
-
-// ===============================
-// VARIÁVEIS
-// ===============================
-
-let questaoAtual = 0;
-let acertos = 0;
-
-
-// ===============================
-// ELEMENTOS DO HTML
-// ===============================
-const telaInicial = document.querySelector(".tela-inicial");
-
-const btnComecar = document.getElementById("btnComecar");
-
-const modalQuestionario = document.getElementById("modalQuestionario");
-
-const numeroQuestao = document.getElementById("numeroQuestao");
-
-const pergunta = document.getElementById("pergunta");
-
-const alternativas = document.getElementById("alternativas");
-
-const resultado = document.getElementById("resultado");
-
-const btnProxima = document.getElementById("btnProxima");
-
-const telaFinal = document.getElementById("telaFinal");
-
-const resultadoFinal = document.getElementById("resultadoFinal");
-
-const btnReiniciar = document.getElementById("btnReiniciar");
-
-
-// ===============================
-// COMEÇAR QUESTIONÁRIO
-// ===============================
-
-btnComecar.addEventListener("click", function() {
-
-    questaoAtual = 0;
-    acertos = 0;
-    telaInicial.style.display = "none";
-
-    telaFinal.style.display = "none";
-
-    modalQuestionario.style.display = "flex";
-
-    carregarQuestao();
-
-});
-
-
-// ===============================
-// CARREGAR QUESTÃO
-// ===============================
-
-function carregarQuestao() {
-
-    const questao = perguntas[questaoAtual];
-
-    numeroQuestao.textContent =
-        `Questão ${questaoAtual + 1} de ${perguntas.length}`;
-
-    pergunta.textContent = questao.pergunta;
-
-    resultado.textContent = "";
-
-    btnProxima.style.display = "none";
-
-    alternativas.innerHTML = "";
-
-
-    // Criar os botões das alternativas
-
-    questao.alternativas.forEach(function(alternativa, indice) {
-
-        const botao = document.createElement("button");
-
-        botao.classList.add("alternativa");
-
-        botao.textContent = alternativa;
-
-        botao.addEventListener("click", function() {
-
-            verificarResposta(indice);
-
-        });
-
-        alternativas.appendChild(botao);
-
-    });
-
+function navigate(path) {
+  if (location.hash === `#${path}`) render();
+  else location.hash = path;
 }
-
-
-// ===============================
-// VERIFICAR RESPOSTA
-// ===============================
-
-function verificarResposta(indiceEscolhido) {
-
-    const questao = perguntas[questaoAtual];
-
-    const botoes = document.querySelectorAll(".alternativa");
-
-
-    // Impedir que o usuário responda novamente
-
-    botoes.forEach(function(botao) {
-
-        botao.disabled = true;
-
-    });
-
-
-    // Verificar se acertou
-
-    if (indiceEscolhido === questao.resposta) {
-
-        resultado.textContent = "Você acertou!";
-
-        acertos++;
-
-    } else {
-
-        resultado.textContent = "Você errou!";
-
-    }
-
-
-    // Mostrar botão para continuar
-
-    btnProxima.style.display = "block";
-
+function preloadBattle() {
+  if (battleAssetsLoaded) return;
+  battleAssetsLoaded = true;
+  [
+    "mario-win",
+    "mario-hurt",
+    "bowser-hurt",
+    "bowser-win",
+    "mario-happy-face",
+    "mario-sad-face",
+    "bowser-happy-face",
+    "bowser-sad-face",
+  ].forEach((name) => {
+    const img = new Image();
+    img.src = asset(name);
+    img.decode().catch(() => {});
+  });
 }
-
-
-// ===============================
-// PRÓXIMA QUESTÃO
-// ===============================
-
-btnProxima.addEventListener("click", function() {
-
-    questaoAtual++;
-
-    if (questaoAtual < perguntas.length) {
-
-        carregarQuestao();
-
-    } else {
-
-        finalizarQuestionario();
-
+function render({ questionFocus = false, preserveScroll = false } = {}) {
+  clearTimeout(feedbackTimer);
+  scene?.destroy();
+  scene = null;
+  locked = false;
+  game = null;
+  const route = location.hash.slice(1) || "/";
+  const match = route.match(/^\/(battle|result)\/([1-3])$/);
+  document.body.dataset.screen = route.split("/")[1] || "landing";
+  if (route === "/") root.innerHTML = landingScreen();
+  else if (route === "/menu") root.innerHTML = menuScreen();
+  else if (route === "/saves") root.innerHTML = savesScreen(store.all());
+  else if (match) {
+    game = store.get(Number(match[2]));
+    if (!game) {
+      navigate("/saves");
+      return;
     }
-
-});
-
-
-// ===============================
-// FINALIZAR QUESTIONÁRIO
-// ===============================
-
-function finalizarQuestionario() {
-
-    modalQuestionario.style.display = "none";
-
-    telaFinal.style.display = "flex";
-
-    resultadoFinal.textContent =
-        `Você acertou ${acertos} de ${perguntas.length} questões.`;
-
+    if (match[1] === "result" && !game.result) {
+      navigate(`/battle/${game.slot}`);
+      return;
+    }
+    if (match[1] === "battle" && game.result) {
+      navigate(`/result/${game.slot}`);
+      return;
+    }
+    root.innerHTML = game.result ? resultScreen(game) : battleScreen(game);
+    preloadBattle();
+  } else {
+    history.replaceState(null, "", "#/");
+    render();
+    return;
+  }
+  if (!preserveScroll) window.scrollTo({ top: 0, behavior: "instant" });
+  if (route === "/") scene = mountScrollScene(root);
+  else
+    (
+      root.querySelector(questionFocus ? "#question-title" : "h1, h2") || root
+    ).focus({ preventScroll: true });
+  document.title = `${route === "/" ? "Uma nova fase do seu conhecimento" : route === "/saves" ? "Escolha seu arquivo" : game?.result ? (game.result === "victory" ? "Scrumban Master!" : "Game Over") : game ? `Questão ${game.progress + 1} de 5` : "Let's Play"} — SCRUMBAN QUESTS`;
 }
-
-
-// ===============================
-// REINICIAR QUESTIONÁRIO
-// ===============================
-
-btnReiniciar.addEventListener("click", function() {
-
-    questaoAtual = 0;
-
-    acertos = 0;
-
-    telaFinal.style.display = "none";
-
-    modalQuestionario.style.display = "flex";
-
-    carregarQuestao();
-
+function startNew(slot) {
+  const fresh = createGame(slot);
+  store.save(fresh);
+  playSound("select");
+  navigate(`/battle/${slot}`);
+}
+function chooseAnswer(choice) {
+  if (!game || game.result || locked) return;
+  const question = questions[game.progress];
+  if (
+    !Number.isInteger(choice) ||
+    choice < 0 ||
+    choice >= question.options.length
+  )
+    return;
+  locked = true;
+  game = answerQuestion(game, choice);
+  // Commit before animation: reloading or leaving during feedback never repeats an answer.
+  store.save(game);
+  showFeedback(root, game, choice, question);
+  playSound(choice === question.answer ? "correct" : "wrong");
+  feedbackTimer = setTimeout(() => {
+    if (game.result) {
+      playSound(game.result);
+      navigate(`/result/${game.slot}`);
+    } else render({ questionFocus: true, preserveScroll: true });
+  }, 1350);
+}
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".skip-link")) {
+    event.preventDefault();
+    root.focus();
+    return;
+  }
+  const target = event.target.closest("[data-action]");
+  if (!target || target.disabled) return;
+  const slot = Number(target.dataset.slot);
+  switch (target.dataset.action) {
+    case "help":
+      document.querySelector("#help-dialog").showModal();
+      break;
+    case "close-dialog":
+      target.closest("dialog").close();
+      break;
+    case "sound": {
+      const enabled = toggleSound();
+      target.setAttribute("aria-pressed", String(enabled));
+      target.setAttribute(
+        "aria-label",
+        enabled ? "Desativar som" : "Ativar som",
+      );
+      target.querySelector(".sound-label").textContent = enabled
+        ? "SOM ON"
+        : "SOM OFF";
+      break;
+    }
+    case "explore":
+      scene?.explore();
+      break;
+    case "continue": {
+      const saved = store.get(slot);
+      if (saved) navigate(`/${saved.result ? "result" : "battle"}/${slot}`);
+      break;
+    }
+    case "new":
+      if (![1, 2, 3].includes(slot)) break;
+      if (store.get(slot) && !store.get(slot).result) {
+        pendingSlot = slot;
+        document.querySelector("#overwrite-dialog").showModal();
+      } else startNew(slot);
+      break;
+    case "confirm-new":
+      document.querySelector("#overwrite-dialog").close();
+      if (pendingSlot) startNew(pendingSlot);
+      pendingSlot = null;
+      break;
+    case "answer":
+      chooseAnswer(Number(target.dataset.choice));
+      break;
+  }
 });
+document.addEventListener("keydown", (event) => {
+  if (
+    event.repeat ||
+    event.ctrlKey ||
+    event.metaKey ||
+    event.altKey ||
+    document.querySelector("dialog[open]")
+  )
+    return;
+  if (/^[a-e]$/i.test(event.key) && document.body.dataset.screen === "battle") {
+    event.preventDefault();
+    chooseAnswer(event.key.toUpperCase().charCodeAt(0) - 65);
+  }
+});
+window.addEventListener("hashchange", () => render());
+render();
